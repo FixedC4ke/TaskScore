@@ -8,7 +8,11 @@ const { JWT_SECRET } = process.env;
 async function register(req, res) {
   let username = req.body.username;
   let unencryptedPass = req.body.password;
-  let existingUser = await knex("users").where("username", username);
+  let role = req.body.role;
+  if (!username || !unencryptedPass || !role) {
+    return res.send({ error: "Некорректный запрос" });
+  }
+  let existingUser = await knex("users").where({ username: username });
   let userAlreadyExists = existingUser.length > 0 ? true : false;
   if (userAlreadyExists) {
     return res
@@ -18,8 +22,7 @@ async function register(req, res) {
     let id = uuid();
     let salt = await bcrypt.genSalt(10);
     let pwdhash = await bcrypt.hash(unencryptedPass, salt);
-    let role = 1;
-    let info = await knex("users").returning('username').insert({
+    let info = await knex("users").returning("username").insert({
       id: id,
       username: username,
       passhash: pwdhash,
