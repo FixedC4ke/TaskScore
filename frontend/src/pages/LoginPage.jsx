@@ -1,7 +1,6 @@
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import API from "../axios";
-import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
 import { useState } from "react";
 import userstate from "../store/UserState";
@@ -27,7 +26,7 @@ export default function LoginPage() {
   }
   const [alert, setAlert] = useState("");
   return (
-    <Container>
+    <>
       <Alert show={alert !== ""} variant="danger">
         {alert}
       </Alert>
@@ -54,6 +53,6 @@ export default function LoginPage() {
           Войти
         </Button>
       </Form>
-    </Container>
+    </>
   );
 }

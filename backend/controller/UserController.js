@@ -22,13 +22,18 @@ async function register(req, res) {
     let id = uuid();
     let salt = await bcrypt.genSalt(10);
     let pwdhash = await bcrypt.hash(unencryptedPass, salt);
-    let info = await knex("users").returning("username").insert({
-      id: id,
-      username: username,
-      passhash: pwdhash,
-      role: role,
-    });
-    return res.send({ info: info[0] });
+    knex("users")
+      .returning("id", "username", "role")
+      .insert({
+        id: id,
+        username: username,
+        passhash: pwdhash,
+        role: role,
+      })
+      .then((inserted) => {
+        let token = jwt.sign(inserted[0], JWT_SECRET);
+        return res.send(token);
+      });
   }
 }
 
@@ -39,7 +44,7 @@ async function login(req, res) {
     role: req.user.role,
   };
   let token = jwt.sign(payload, JWT_SECRET);
-  res.send(token);
+  return res.send(token);
 }
 
 module.exports = { register, login };
