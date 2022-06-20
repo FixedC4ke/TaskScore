@@ -28,6 +28,4 @@ services:
       - ./frontend/:/app
     ports:
       - "3000:3000"
-    links:
-      - backend
     command: "npm run start"
