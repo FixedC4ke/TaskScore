@@ -12,7 +12,7 @@ services:
     volumes:
       - ./db.sql:/docker-entrypoint-initdb.d/db.sql
 
-  node:
+  backend:
     image: "node:18"
     working_dir: /app
     volumes:
@@ -20,3 +20,14 @@ services:
     ports:
       - "8080:8080"
     command: "npm run dev"
+
+  frontend:
+    image: "node:18"
+    working_dir: /app
+    volumes:
+      - ./frontend/:/app
+    ports:
+      - "3000:3000"
+    links:
+      - backend
+    command: "npm run start"

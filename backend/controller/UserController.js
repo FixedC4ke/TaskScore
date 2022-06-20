@@ -9,7 +9,7 @@ async function register(req, res) {
   let username = req.body.username;
   let unencryptedPass = req.body.password;
   let role = req.body.role;
-  if (!username || !unencryptedPass || !role) {
+  if (!username || !unencryptedPass || !role || role==15) {
     return res.send({ error: "Некорректный запрос" });
   }
   let existingUser = await knex("users").where({ username: username });
